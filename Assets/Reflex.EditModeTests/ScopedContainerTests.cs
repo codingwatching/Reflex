@@ -37,7 +37,7 @@ namespace Reflex.EditModeTests
         [Test]
         public void ScopedContainer_CanResolveDependency_FromParentContainer()
         {
-            using (var outer = new ContainerBuilder().AddSingleton(42, typeof(int)).Build())
+            using (var outer = new ContainerBuilder().AddSingleton(42, new[] { typeof(int) }).Build())
             {
                 using (var inner = outer.Scope())
                 {
@@ -50,7 +50,7 @@ namespace Reflex.EditModeTests
         public void ParentWithScopedContainer_ParentShouldNotBeAbleToResolveDependencyFromChild()
         {
             var outer = new ContainerBuilder().Build();
-            var inner = outer.Scope(builder => builder.AddSingleton(42, typeof(int)));
+            var inner = outer.Scope(builder => builder.AddSingleton(42, new[] { typeof(int) }));
             Action resolve = () => outer.Single<int>();
             resolve.Should().ThrowExactly<UnknownContractException>();
         }
@@ -58,7 +58,7 @@ namespace Reflex.EditModeTests
         [Test]
         public void ScopedContainer_WhenDisposed_ShouldNotDisposeDependencyFromParentContainer()
         {
-            using (var outer = new ContainerBuilder().AddSingleton(typeof(Disposable), typeof(Disposable)).Build())
+            using (var outer = new ContainerBuilder().AddSingleton(typeof(Disposable), new[] { typeof(Disposable) }).Build())
             {
                 using (var inner = outer.Scope())
                 {

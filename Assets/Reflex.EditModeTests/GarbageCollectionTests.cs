@@ -28,7 +28,7 @@ namespace Reflex.EditModeTests
 
             void Act()
             {
-                var container = new ContainerBuilder().AddSingleton(typeof(Service), typeof(Service)).Build();
+                var container = new ContainerBuilder().AddSingleton(typeof(Service), new[] { typeof(Service) }).Build();
                 var service = container.Single<Service>();
                 references.Add(new WeakReference(service));
                 container.Dispose();

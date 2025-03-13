@@ -11,11 +11,11 @@ namespace Reflex.Benchmark
         private void Start()
         {
             _container = new ContainerBuilder()
-                .AddTransient(typeof(A), typeof(IA))
-                .AddTransient(typeof(B), typeof(IB))
-                .AddTransient(typeof(C), typeof(IC))
-                .AddTransient(typeof(D), typeof(ID))
-                .AddTransient(typeof(E), typeof(IE))
+                .AddTransient(typeof(A), new[] { typeof(IA) })
+                .AddTransient(typeof(B), new[] { typeof(IB) })
+                .AddTransient(typeof(C), new[] { typeof(IC) })
+                .AddTransient(typeof(D), new[] { typeof(ID) })
+                .AddTransient(typeof(E), new[] { typeof(IE) })
                 .Build();
         }
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Reflex.Enums;
 using Reflex.Extensions;
 using Reflex.Generics;
 using Reflex.Resolvers;
@@ -62,27 +63,27 @@ namespace Reflex.Core
             return this;
         }
 
-        public ContainerBuilder AddSingleton(Type concrete, params Type[] contracts)
+        public ContainerBuilder AddSingleton(Type concrete, Type[] contracts)
         {
             return Add(concrete, contracts, new SingletonTypeResolver(concrete));
         }
 
         public ContainerBuilder AddSingleton(Type concrete)
         {
-            return AddSingleton(concrete, concrete);
+            return AddSingleton(concrete, new[] { concrete });
         }
 
-        public ContainerBuilder AddSingleton(object instance, params Type[] contracts)
+        public ContainerBuilder AddSingleton(object instance, Type[] contracts)
         {
             return Add(instance.GetType(), contracts, new SingletonValueResolver(instance));
         }
 
         public ContainerBuilder AddSingleton(object instance)
         {
-            return AddSingleton(instance, instance.GetType());
+            return AddSingleton(instance, new[] { instance.GetType() });
         }
 
-        public ContainerBuilder AddSingleton<T>(Func<Container, T> factory, params Type[] contracts)
+        public ContainerBuilder AddSingleton<T>(Func<Container, T> factory, Type[] contracts)
         {
             var resolver = new SingletonFactoryResolver(Proxy);
             return Add(typeof(T), contracts, resolver);
@@ -95,20 +96,20 @@ namespace Reflex.Core
 
         public ContainerBuilder AddSingleton<T>(Func<Container, T> factory)
         {
-            return AddSingleton(factory, typeof(T));
+            return AddSingleton(factory, new[] { typeof(T) });
         }
 
-        public ContainerBuilder AddTransient(Type concrete, params Type[] contracts)
+        public ContainerBuilder AddTransient(Type concrete, Type[] contracts)
         {
             return Add(concrete, contracts, new TransientTypeResolver(concrete));
         }
 
         public ContainerBuilder AddTransient(Type concrete)
         {
-            return AddTransient(concrete, concrete);
+            return AddTransient(concrete, new[] { concrete });
         }
 
-        public ContainerBuilder AddTransient<T>(Func<Container, T> factory, params Type[] contracts)
+        public ContainerBuilder AddTransient<T>(Func<Container, T> factory, Type[] contracts)
         {
             var resolver = new TransientFactoryResolver(Proxy);
             return Add(typeof(T), contracts, resolver);
@@ -121,22 +122,20 @@ namespace Reflex.Core
 
         public ContainerBuilder AddTransient<T>(Func<Container, T> factory)
         {
-            return AddTransient(factory, typeof(T));
+            return AddTransient(factory, new[] { typeof(T) });
         }
         
-        // Scoped
-        
-        public ContainerBuilder AddScoped(Type concrete, params Type[] contracts)
+        public ContainerBuilder AddScoped(Type concrete, Type[] contracts)
         {
             return Add(concrete, contracts, new ScopedTypeResolver(concrete));
         }
 
         public ContainerBuilder AddScoped(Type concrete)
         {
-            return AddScoped(concrete, concrete);
+            return AddScoped(concrete, new[] { concrete });
         }
 
-        public ContainerBuilder AddScoped<T>(Func<Container, T> factory, params Type[] contracts)
+        public ContainerBuilder AddScoped<T>(Func<Container, T> factory, Type[] contracts)
         {
             var resolver = new ScopedFactoryResolver(Proxy);
             return Add(typeof(T), contracts, resolver);
@@ -149,7 +148,7 @@ namespace Reflex.Core
 
         public ContainerBuilder AddScoped<T>(Func<Container, T> factory)
         {
-            return AddScoped(factory, typeof(T));
+            return AddScoped(factory, new[] { typeof(T) });
         }
 
         public bool HasBinding(Type type)

@@ -36,7 +36,7 @@ namespace Reflex.EditModeTests
         public void Resolve_ValueTypeSingleton_ShouldReturn42()
         {
             var container = new ContainerBuilder()
-                .AddSingleton(42, typeof(int))
+                .AddSingleton(42, new[] { typeof(int) })
                 .Build();
             
             container.Single<int>().Should().Be(42);
@@ -54,7 +54,7 @@ namespace Reflex.EditModeTests
         public void Resolve_AsTransientFromType_ShouldReturnAlwaysANewInstance()
         {
             var container = new ContainerBuilder()
-                .AddTransient(typeof(Valuable), typeof(IValuable))
+                .AddTransient(typeof(Valuable), new[] { typeof(IValuable) })
                 .Build();
             
             container.Single<IValuable>().Value = 123;
@@ -86,7 +86,7 @@ namespace Reflex.EditModeTests
         public void Resolve_AsSingletonFromType_ShouldReturnAlwaysSameInstance()
         {
             var container = new ContainerBuilder()
-                .AddSingleton(typeof(Valuable), typeof(IValuable))
+                .AddSingleton(typeof(Valuable), new[] { typeof(IValuable) })
                 .Build();
             
             container.Single<IValuable>().Value = 123;
@@ -126,7 +126,7 @@ namespace Reflex.EditModeTests
         public void Resolve_KnownDependencyAsTransientWithUnknownDependency_ShouldThrowConstructorInjectorException()
         {
             var container = new ContainerBuilder()
-                .AddTransient(typeof(ClassWithDependency), typeof(IClassWithDependency))
+                .AddTransient(typeof(ClassWithDependency), new[] { typeof(IClassWithDependency) })
                 .Build();
             
             Action resolve = () => container.Single<IClassWithDependency>();
@@ -137,7 +137,7 @@ namespace Reflex.EditModeTests
         public void Resolve_KnownDependencyAsSingletonWithUnknownDependency_ShouldThrowConstructorInjectorException()
         {
             var container = new ContainerBuilder()
-                .AddSingleton(typeof(ClassWithDependency), typeof(IClassWithDependency))
+                .AddSingleton(typeof(ClassWithDependency), new[] { typeof(IClassWithDependency) })
                 .Build();
             
             Action resolve = () => container.Single<IClassWithDependency>();
@@ -148,7 +148,7 @@ namespace Reflex.EditModeTests
         public void Resolve_ValueTypeAsTransient_ShouldReturnDefault()
         {
             var container = new ContainerBuilder()
-                .AddTransient(typeof(int), typeof(int))
+                .AddTransient(typeof(int), new[] { typeof(int) })
                 .Build();
             
         	container.Single<int>().Should().Be(default);
@@ -168,8 +168,8 @@ namespace Reflex.EditModeTests
         public void Resolve_ValueTypeAsTransient_CustomConstructor_ValueShouldReturn42()
         {
             var container = new ContainerBuilder()
-                .AddSingleton(42, typeof(int))
-                .AddTransient(typeof(MyStruct), typeof(MyStruct))
+                .AddSingleton(42, new[] { typeof(int) })
+                .AddTransient(typeof(MyStruct), new[] { typeof(MyStruct) })
                 .Build();
             
             container.Single<MyStruct>().Value.Should().Be(42);
@@ -214,9 +214,9 @@ namespace Reflex.EditModeTests
         public void Resolve_ClassWithGenericDependency_WithNormalDefinition_ValuesShouldBe42AndABC()
         {
             var container = new ContainerBuilder()
-                .AddTransient(typeof(Xing), typeof(Xing))
-                .AddTransient(typeof(IntSetup), typeof(ISetup<int>))
-                .AddTransient(typeof(StringSetup), typeof(ISetup<string>))
+                .AddTransient(typeof(Xing), new[] { typeof(Xing) })
+                .AddTransient(typeof(IntSetup), new[] { typeof(ISetup<int>) })
+                .AddTransient(typeof(StringSetup), new[] { typeof(ISetup<string>) })
                 .Build();
             
         	var instance = container.Construct<Xing>();
@@ -237,7 +237,7 @@ namespace Reflex.EditModeTests
         [Test]
         public void Bind_LazySingleton_ThenInvokeInstantiateNonLazySingletons_ShouldNotRunConstructor()
         {
-            new ContainerBuilder().AddSingleton(typeof(SomeSingleton), typeof(SomeSingleton)).Build();
+            new ContainerBuilder().AddSingleton(typeof(SomeSingleton), new[] { typeof(SomeSingleton) }).Build();
             SomeSingleton.ConstructorCalled = false;
             SomeSingleton.ConstructorCalled.Should().BeFalse();
         }

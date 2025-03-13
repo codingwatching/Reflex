@@ -14,13 +14,13 @@ namespace Reflex.Sample.Infrastructure
             InstallInput(containerBuilder, useMouse: false);
             containerBuilder.AddSingleton(_pickupSoundEffectPrefab);
             containerBuilder.AddSingleton(_collectorConfigurationModel);
-            containerBuilder.AddSingleton(typeof(CollectionStoragePrefs), typeof(ICollectionStorage));
+            containerBuilder.AddSingleton(typeof(CollectionStoragePrefs), new[] { typeof(ICollectionStorage) });
         }
 
         private static void InstallInput(ContainerBuilder containerBuilder, bool useMouse)
         {
             var implementation = useMouse ? typeof(CollectorInputMouse) : typeof(CollectorInputKeyboard);
-            containerBuilder.AddSingleton(implementation, typeof(ICollectorInput));
+            containerBuilder.AddSingleton(implementation, new[] { typeof(ICollectorInput) });
         }
     }
 }
